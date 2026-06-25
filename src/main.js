@@ -56,7 +56,7 @@ async function onSubmit(e) {
 
     createGallery(images);
     updLoadMoreBtnVisibility();
-  } catch (err) {
+  } catch (error) {
     iziToast.error({
       title: 'Error',
       message: 'Something went wrong. Try again later.',
@@ -85,7 +85,10 @@ async function handleLoadMore() {
 
     updLoadMoreBtnVisibility();
   } catch (error) {
-    console.log(error.message);
+    iziToast.error({
+      title: 'Error',
+      message: 'Something went wrong. Try again later.',
+    });
   } finally {
     hideLoader();
   }
