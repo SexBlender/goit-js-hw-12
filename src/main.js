@@ -52,9 +52,10 @@ async function onSubmit(e) {
       });
       return;
     }
+    totalPages = Math.ceil(data.totalHits / PER_PAGE);
+
     createGallery(images);
-    totalPages = Math.ceil(data.total / PER_PAGE);
-    console.log(data.total);
+    updLoadMoreBtnVisibility();
   } catch (err) {
     iziToast.error({
       title: 'Error',
@@ -62,7 +63,6 @@ async function onSubmit(e) {
     });
   } finally {
     hideLoader();
-    updLoadMoreBtnVisibility();
   }
   form.reset();
 }
@@ -74,6 +74,15 @@ async function handleLoadMore() {
   try {
     const data = await getImagesByQuery(query, page);
     createGallery(data.hits);
+
+    const galleryCard = document.querySelector('.gallery-item');
+    const cardHeight = galleryCard.getBoundingClientRect().height;
+
+    window.scrollBy({
+      top: cardHeight * 2,
+      behavior: 'smooth',
+    });
+
     updLoadMoreBtnVisibility();
   } catch (error) {
     console.log(error.message);
@@ -87,5 +96,10 @@ function updLoadMoreBtnVisibility() {
     showLoadMoreBtn();
   } else {
     hideLoadMoreBtn();
+
+    iziToast.info({
+      message: "We're sorry, but you've reached the end of search results.",
+      position: 'topRight',
+    });
   }
 }
